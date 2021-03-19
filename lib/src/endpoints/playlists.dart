@@ -130,4 +130,12 @@ class Playlists extends EndpointPaging {
     final url = 'v1/playlists/$playlistId/followers';
     await _api._delete(url);
   }
+
+  Future<List<bool>> checkIfUserFollowsPlaylist(
+      String playlistId, List<String> userIds) async {
+    final query = _buildQuery({'ids': userIds.join(',')});
+    final url = 'v1/playlists/$playlistId/followers/contains?$query';
+    final jsonString = await _api._get(url);
+    return json.decode(jsonString) as List<bool>;
+  }
 }

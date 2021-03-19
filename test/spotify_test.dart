@@ -205,6 +205,16 @@ Future main() async {
     });
   });
 
+  group('Playlist', () async {
+    test('check if users follow playlist', () async {
+      var following = await spotify.playlists
+          .checkIfUserFollowsPlaylist('2v3iNvBX8Ay1Gt2uXtUKUT', ['johndoe']);
+      expect(following == null, false);
+      expect(following.length, 2);
+      expect(following[0], true);
+      expect(following[1], true);
+    });
+  });
   group('Auth', () {
     test('getCredentials', () async {
       var result = await spotify.getCredentials();
