@@ -285,17 +285,25 @@ Future main() async {
           .all();
       expect(result.length, 2);
       var first = result.first;
-      expect(first.track != null, true);
 
       // just testing some sample attributes
       var firstTrack = first.track;
+      expect(first.track, isNotNull);
       expect(firstTrack!.durationMs, 108546);
       expect(firstTrack.explicit, false);
       expect(firstTrack.id, '2gNfxysfBRfl9Lvi9T3v6R');
       expect(firstTrack.artists!.length, 1);
       expect(firstTrack.artists!.first.name, 'Tame Impala');
 
+      var firstAlbum = firstTrack.album;
+      expect(firstAlbum, isNotNull);
+      expect(firstAlbum!.albumType, AlbumType.compilation);
+      expect(firstAlbum.type, "album");
+      expect(firstAlbum.name, "Best of");
+      expect(firstAlbum.uri, "spotify:album:2up3OPMp9Tb4dAKM2erWXQ");
+
       var second = result.last;
+      expect(second.track!.album, isNotNull);
       expect(second.playedAt, DateTime.tryParse('2016-12-13T20:42:17.016Z'));
       expect(second.context!.uri, 'spotify:artist:5INjqkS1o8h1imAzPqGZBb');
     });

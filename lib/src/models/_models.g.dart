@@ -889,7 +889,7 @@ UserPublic _$UserPublicFromJson(Map<String, dynamic> json) => UserPublic()
 PlayHistory _$PlayHistoryFromJson(Map<String, dynamic> json) => PlayHistory()
   ..track = json['track'] == null
       ? null
-      : TrackSimple.fromJson(json['track'] as Map<String, dynamic>)
+      : Track.fromJson(json['track'] as Map<String, dynamic>)
   ..playedAt = json['played_at'] == null
       ? null
       : DateTime.parse(json['played_at'] as String)
