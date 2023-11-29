@@ -186,7 +186,7 @@ Future main() async {
       expect(items.first.name, 'Hot News @ Melhores Eletrônicas 2022');
     });
 
-    test('Get Playlist images', () async {
+    test('images', () async {
       var images = await spotify.playlists.images('1XIAxOGAEK2h4ravpNTmYF');
       expect(images.length, 1);
       var firstImage = images.first;
@@ -194,6 +194,10 @@ Future main() async {
           'https://i.scdn.co/image/ab67616d00001e02ff9ca10b55ce82ae553c8228');
       expect(firstImage.height, 300);
       expect(firstImage.width, 300);
+    });
+
+    test('getPlaylistItems', () async {
+      var items = await spotify.playlists.getItemsByPlaylistId('1XIAxOGAEK2h4ravpNTmYF');
     });
 
     test('followedByUsers', () async {
@@ -277,7 +281,7 @@ Future main() async {
       expect(result.first.type, DeviceType.Computer);
       expect(result.first.volumePercent, 100);
 
-      // the second entry does not have a valid [DeviceType], 
+      // the second entry does not have a valid [DeviceType],
       // and should have `Unknown` instead.
       expect(result.last.type, DeviceType.Unknown);
     });

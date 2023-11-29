@@ -36,11 +36,21 @@ class Playlists extends EndpointPaging {
   }
 
   /// Returns `track`s from a given spotify [playlistId]
-  Pages<Track> getTracksByPlaylistId(playlistId) {
+  Pages<Track> getTracksByPlaylistId(String playlistId) {
     // restricting the return items to `track`
     final query = _buildQuery({'additional_types': 'track'});
     return _getPages('v1/playlists/$playlistId/tracks$query',
         (json) => Track.fromJson(json['track']));
+  }
+
+  BundledPages getItemsByPlaylistId(String playlistId,
+      {List<PlaylistFilter> filters = PlaylistFilter.values}) {
+    final additionalTypes = filters.map((filter) => filter._key).join(',');
+    final query = _buildQuery({'additional_types': additionalTypes});
+    return _getBundledPages('v1/playlists/$playlistId/tracks$query', {
+      'track': (json) => Track.fromJson(json),
+      'episode': (json) => EpisodeFull.fromJson(json)
+    });
   }
 
   /// [userId] - the Spotify user ID
@@ -322,4 +332,13 @@ class Playlists extends EndpointPaging {
     final items = json.decode(jsonString) as Iterable<dynamic>;
     return items.map((item) => Image.fromJson(item));
   }
+}
+
+enum PlaylistFilter {
+  track(key: 'album'),
+  episode(key: 'artist');
+
+  const PlaylistFilter({required String key}) : _key = key;
+
+  final String _key;
 }
