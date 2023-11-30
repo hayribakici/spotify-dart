@@ -16,6 +16,10 @@ abstract class EndpointPaging extends EndpointBase {
           [String? pageKey, ParserFunction<Object>? pageContainerParser]) =>
       CursorPages(_api, path, pageItemParser, pageKey, pageContainerParser);
 
+  MultiPage _getMultiPage<T>(
+          String path, Map<String, ParserFunction<T>> itemMappers) =>
+      MultiPage(_api, path, itemMappers);
+
   BundledPages _getBundledPages<T>(
           String path, Map<String, ParserFunction<T>> pageItemParsers,
           [String? pageKey, ParserFunction<Object>? pageContainerParser]) =>
@@ -36,10 +40,18 @@ abstract class BasePage<T> {
     _container = pageContainer;
   }
 
-  // BasePage.fromParserMap(this._paging, Map<String, ParserFunction<T> parserMap, [Object? pageContainer]) {
-  //   _items = _paging.itemsNative!.map((e) => parserMap[e.])
-  //   _container = pageContainer;
-  // }
+  BasePage.fromParserMap(
+      this._paging, Map<String, ParserFunction<dynamic>> parserMap,
+      [Object? pageContainer]) {
+    _items = _paging.itemsNative!.map((item) {
+      var type = item["track"]["type"] as String;
+      if (parserMap.containsKey(type)) {
+        return parserMap[type]!(item);
+      }
+      throw TypeError();
+    });
+    _container = pageContainer;
+  }
 
   /// The offset-based paging object is a container for a set of objects. It
   /// contains a key called items (whose value is an array of the requested
@@ -71,6 +83,11 @@ class Page<T> extends BasePage<T> {
   Page(Paging<T> paging, ParserFunction<T> pageItemParser,
       [Object? pageContainer])
       : super(paging, pageItemParser, pageContainer);
+
+  Page.fromParserMap(
+      Paging<T> paging, Map<String, ParserFunction<dynamic>> parserMap,
+      [Object? pageContainer])
+      : super.fromParserMap(paging, parserMap);
 
   @override
   bool get isLast {
@@ -290,24 +307,24 @@ class CursorPages<T> extends SinglePages<T, CursorPage<T>>
   }
 }
 
-// class MultiPage extends SinglePages<dynamic, Page<dynamic>>
-//     with OffsetStrategy<Page<dynamic>> {
-//   final Map<String, ParserFunction<dynamic>> _pageMappers;
+class MultiPage extends SinglePages<dynamic, Page<dynamic>>
+    with OffsetStrategy<Page<dynamic>> {
+  final Map<String, ParserFunction<dynamic>> _pageMappers;
 
-//   MultiPage(SpotifyApiBase api, String path, this._pageMappers)
-//       : super(api, path, null, null);
+  MultiPage(SpotifyApiBase api, String path, this._pageMappers)
+      : super(api, path, null, null);
 
-//   @override
-//   Future<Page<dynamic>> getPage(int limit, [int offset = 0]) async {
-//     var pathDelimiter = _path.contains('?') ? '&' : '?';
-//     var newPath = '$_path${pathDelimiter}limit=$limit&offset=$offset';
+  @override
+  Future<Page<dynamic>> getPage(int limit, [int offset = 0]) async {
+    var pathDelimiter = _path.contains('?') ? '&' : '?';
+    var newPath = '$_path${pathDelimiter}limit=$limit&offset=$offset';
 
-//     var jsonString = await _api._get(newPath);
-//     var map = Paging.fromJson(json.decode(jsonString));
+    var jsonString = await _api._get(newPath);
+    var paging = Paging.fromJson(json.decode(jsonString));
 
-//     for (var key in _pageMappers.keys) {}
-//   }
-// }
+    return Page.fromParserMap(paging, _pageMappers);
+  }
+}
 
 /// Page that allows multiple types (artist, track, episode etc.) together
 class BundledPages extends _Pages with OffsetStrategy<List<Page<dynamic>>> {

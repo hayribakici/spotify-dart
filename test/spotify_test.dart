@@ -196,17 +196,18 @@ Future main() async {
       expect(firstImage.width, 300);
     });
 
-    // test('getPlaylistItems', () async {
-    //   var items =
-    //       spotify.playlists.getItemsByPlaylistId('1XIAxOGAEK2h4ravpNTmYF');
-    //   expect(items, isNotNull);
+    test('getPlaylistItems', () async {
+      var items =
+          spotify.playlists.getItemsByPlaylistId('1XIAxOGAEK2h4ravpNTmYF');
+      expect(items, isNotNull);
 
-    //   var first = await items.first();
-    //   for (var item in first) {
-    //     print(item);
-    //   }
-    //   // print((await items.first()).);
-    // });
+      var first = (await items.first()).items;
+      expect(first, isNotNull);
+      expect(first, isNotEmpty);
+      expect(first?.length, 2);
+      expect(first?.first?.runtimeType, Track);
+      expect(first?.last?.runtimeType, EpisodeFull);
+    });
 
     test('followedByUsers', () async {
       var result = await spotify.playlists
