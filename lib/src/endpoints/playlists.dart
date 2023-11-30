@@ -43,15 +43,15 @@ class Playlists extends EndpointPaging {
         (json) => Track.fromJson(json['track']));
   }
 
-  BundledPages getItemsByPlaylistId(String playlistId,
-      {List<PlaylistFilter> filters = PlaylistFilter.values}) {
-    final additionalTypes = filters.map((filter) => filter._key).join(',');
-    final query = _buildQuery({'additional_types': additionalTypes});
-    return _getBundledPages('v1/playlists/$playlistId/tracks$query', {
-      'track': (json) => Track.fromJson(json),
-      'episode': (json) => EpisodeFull.fromJson(json)
-    });
-  }
+  // Pages<List<T>> getItemsByPlaylistId<T>(String playlistId,
+  //     {Iterable<PlaylistFilter> filters = PlaylistFilter.values}) {
+  //   final additionalTypes = filters.map((filter) => filter._key).join(',');
+  //   final query = _buildQuery({'additional_types': additionalTypes});
+  //   return _getPages('v1/playlists/$playlistId/tracks$query', {
+  //     'track': (json) => Track.fromJson(json),
+  //     'episode': (json) => EpisodeFull.fromJson(json)
+  //   });
+  // }
 
   /// [userId] - the Spotify user ID
   ///

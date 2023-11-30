@@ -196,9 +196,17 @@ Future main() async {
       expect(firstImage.width, 300);
     });
 
-    test('getPlaylistItems', () async {
-      var items = await spotify.playlists.getItemsByPlaylistId('1XIAxOGAEK2h4ravpNTmYF');
-    });
+    // test('getPlaylistItems', () async {
+    //   var items =
+    //       spotify.playlists.getItemsByPlaylistId('1XIAxOGAEK2h4ravpNTmYF');
+    //   expect(items, isNotNull);
+
+    //   var first = await items.first();
+    //   for (var item in first) {
+    //     print(item);
+    //   }
+    //   // print((await items.first()).);
+    // });
 
     test('followedByUsers', () async {
       var result = await spotify.playlists
