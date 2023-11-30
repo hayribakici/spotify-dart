@@ -307,6 +307,7 @@ class CursorPages<T> extends SinglePages<T, CursorPage<T>>
   }
 }
 
+/// Handles retrieval of a page with multiple types
 class MultiPage extends SinglePages<dynamic, Page<dynamic>>
     with OffsetStrategy<Page<dynamic>> {
   final Map<String, ParserFunction<dynamic>> _pageMappers;

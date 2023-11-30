@@ -201,12 +201,12 @@ Future main() async {
           spotify.playlists.getItemsByPlaylistId('1XIAxOGAEK2h4ravpNTmYF');
       expect(items, isNotNull);
 
-      var first = (await items.first()).items;
-      expect(first, isNotNull);
-      expect(first, isNotEmpty);
-      expect(first?.length, 2);
-      expect(first?.first?.runtimeType, Track);
-      expect(first?.last?.runtimeType, EpisodeFull);
+      var page = (await items.first()).items;
+      expect(page, isNotNull);
+      expect(page, isNotEmpty);
+      expect(page?.length, 2);
+      expect(page?.first?.runtimeType, Track);
+      expect(page?.last?.runtimeType, EpisodeFull);
     });
 
     test('followedByUsers', () async {
