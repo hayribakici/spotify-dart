@@ -35,7 +35,7 @@ class Playlists extends EndpointPaging {
         'v1/users/$userId/playlists', (json) => PlaylistSimple.fromJson(json));
   }
 
-  /// Returns `track`s from a given spotify [playlistId]
+  /// Returns [Track]s from a given spotify [playlistId]
   Pages<Track> getTracksByPlaylistId(String playlistId) {
     // restricting the return items to `track`
     final query = _buildQuery({'additional_types': 'track'});
@@ -43,10 +43,14 @@ class Playlists extends EndpointPaging {
         (json) => Track.fromJson(json['track']));
   }
 
+  /// Returns [Track] and/or [EpisodeFull] items from a given [playlistId]
+  /// regarding wich [PlaylistFilter] is set. Default is to [PlaylistFilter.track] 
+  /// and [PlaylistFilter.episode].
   MultiPage getItemsByPlaylistId<T>(String playlistId,
       {Iterable<PlaylistFilter> filters = PlaylistFilter.values}) {
     final additionalTypes = filters.map((filter) => filter._key).join(',');
     final query = _buildQuery({'additional_types': additionalTypes});
+    
     return _getMultiPage('v1/playlists/$playlistId/tracks?$query', {
       'track': (json) => Track.fromJson(json),
       'episode': (json) => EpisodeFull.fromJson(json)
@@ -334,8 +338,13 @@ class Playlists extends EndpointPaging {
   }
 }
 
+/// Enum for filtering the items when requesting the items
+/// from a playlist. (See [Playlists.getItemsByPlaylistId])
 enum PlaylistFilter {
+  /// Enum item to request only [Track]s from a playlist.
   track(key: 'track'),
+
+  /// Enum item to request only [EpisodeFull]s from a playlist
   episode(key: 'episode');
 
   const PlaylistFilter({required String key}) : _key = key;

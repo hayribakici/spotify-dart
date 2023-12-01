@@ -17,8 +17,8 @@ abstract class EndpointPaging extends EndpointBase {
       CursorPages(_api, path, pageItemParser, pageKey, pageContainerParser);
 
   MultiPage _getMultiPage<T>(
-          String path, Map<String, ParserFunction<T>> itemMappers) =>
-      MultiPage(_api, path, itemMappers);
+          String path, Map<String, ParserFunction<T>> pageItemParsers) =>
+      MultiPage(_api, path, pageItemParsers);
 
   BundledPages _getBundledPages<T>(
           String path, Map<String, ParserFunction<T>> pageItemParsers,
